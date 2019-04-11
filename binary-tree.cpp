@@ -1,8 +1,8 @@
 // NEXT TASK: MODIFY READBINARYTREE TO interpret "X" or "x" as nullpointer
 // e.g., 0 x 1 x 2 should be a path consisting of 3 nodes
 // NOTE we should accept both
-// 0 x 1 x x x 2
-// and 0 x 1 x 2; the first "x" means the first 2 nodes on row 2 (root=row 0)
+// the verbose 0 x 1 x x x 2
+// as well as 0 x 1 x 2; here, the first "x" means the first 2 nodes on row 2 (root=row 0)
 // must also be "x" since null can't have any children
 
 // #include <cassert>
@@ -24,23 +24,9 @@
 #include <iterator>
 #include <sstream>
 
-// reads a row of ints
-std::vector<int>  readVector() {
 
-    std::string temp_line;
 
-    std::vector<int> v;
 
-    std::istringstream line_as_stream;
-
-    std::getline(std::cin, temp_line);
-    line_as_stream.str(temp_line);
-    std::copy(std::istream_iterator<int>(line_as_stream),
-        std::istream_iterator<int>(),
-        std::back_inserter(v));
-
-    return v;    
-}
 
 
 struct TreeNode {
@@ -58,26 +44,10 @@ struct TreeNode {
     };
 };
 
-void printNodes(std::vector<TreeNode*> nodes)
+
+
+struct BinaryTree
 {
-    for (TreeNode* x: nodes)
-    {
-        std::cout<<x->data<<" ";
-    }
-    std::cout<<std::endl;
-}
-
-void printNodes(std::deque<TreeNode*> nodes)
-{
-    for (TreeNode* x: nodes)
-    {
-        std::cout<<x->data<<" ";
-    }
-    std::cout<<std::endl;
-}
-
-
-struct BinaryTree {
     TreeNode* root;
 
     BinaryTree() {
@@ -103,8 +73,9 @@ struct BinaryTree {
     void leftRotate();
 };
 
-// i.e., returns nodes row by row, from left to right
-std::vector<TreeNode*> BinaryTree::BFS() {
+// BFS returns nodes row by row, from left to right
+std::vector<TreeNode*> BinaryTree::BFS()
+{
     // first-in-first-out queue
     std::deque<TreeNode*> queue(1,root);
     std::vector<TreeNode*> visited(0);
@@ -135,7 +106,6 @@ std::vector<TreeNode*> BinaryTree::BFS() {
 
 int BinaryTree::treeHeight()
 {
-
 }
 
 void BinaryTree::rightRotate()
@@ -160,47 +130,6 @@ void BinaryTree::leftRotate()
 
 
 
-void displayTree(BinaryTree& b)
-{
-
-    // std::cout<<"about to display tree..."<<std::endl;
-    std::vector<TreeNode*> nodes = b.BFS();
-    // std::cout<<"the size of the tree is:  "<<nodes.size()<<", and flattened it looks like:  "<<std::endl;
-    
-    for (TreeNode* n: nodes)
-    {
-        std::cout<<n->data<<" ";
-    }
-    std::cout<<std::endl;
-}
-
-
-
-// Reads a binary tree from a row of ints entered row-by-row, left-to-right starting from the root
-BinaryTree readTree() {
-
-    auto v = readVector();
-    int n = v.size();
-    TreeNode* curr;
-    std::vector<TreeNode*> nodes;
-    for (int j = 0; j<n; j++)
-    {
-        TreeNode* node_j = new TreeNode(v[j]);
-        nodes.push_back(node_j);
-    }
-
-    for (int j=0; 2*j+1<n; j++)
-    {
-        if (2*j+1<n)  nodes[j]->left = nodes[2*j+1];
-
-        if (2*j+2<n)  nodes[j]->right = nodes[2*j+2];
-    }
-    
-    // std::cout<<"made a tree of size:  "<<n<<std::endl;
-    BinaryTree b(nodes[0]);
-    return b;
-    
-}
 
 
 
@@ -208,22 +137,4 @@ BinaryTree readTree() {
 
 
 
-int main() 
-{
 
-    BinaryTree b = readTree();
-
-    std::cout<<"b's root is:  "<<b.root->data<<"!"<<std::endl;
-    displayTree(b);
-
-
-    b.leftRotate();
-    std::cout<<"after left rotation:  "<<std::endl;
-    displayTree(b);
-
-    b.rightRotate();
-    std::cout<<"after right rotation:  "<<std::endl;
-    displayTree(b);
-
-    return 0;
-}
