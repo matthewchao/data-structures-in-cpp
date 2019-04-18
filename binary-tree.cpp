@@ -1,33 +1,9 @@
-// NEXT TASK: MODIFY READBINARYTREE TO interpret "X" or "x" as nullpointer
-// e.g., 0 x 1 x 2 should be a path consisting of 3 nodes
-// NOTE we should accept both
-// the verbose 0 x 1 x x x 2
-// as well as 0 x 1 x 2; here, the first "x" means the first 2 nodes on row 2 (root=row 0)
-// must also be "x" since null can't have any children
+// TODO NEXT: handle edge cases for BinaryTree:BFS()
+// specifically what to do with nil leaves or empty trees
 
-// #include <cassert>
-#include <iostream>
-// #include <memory>
 #include <string>
-// #include <math.h>
-// #include <numeric>
-// #include <algorithm>
 #include <vector>
 #include <deque>
-// #include <array>
-// #include <map>
-// #include <unordered_map>
-// #include <set>
-// #include <float.h>
-// #include <tuple>
-// #include <stdexcept>
-#include <iterator>
-#include <sstream>
-
-
-
-
-
 
 struct TreeNode {
     int data;
@@ -82,25 +58,19 @@ std::vector<TreeNode*> BinaryTree::BFS()
     TreeNode* curr;
     while (!queue.empty())
     {
-        // std::cout<<"queue is:  ";
-        // printNodes(queue);
         curr = queue.front();
         if (curr->left)
         {
-            // std::cout<<curr->data<<" has a left child! adding to queue..."<<std::endl;
             queue.push_back(curr->left);
         }
         if (curr->right)
         {
-            // std::cout<<curr->data<<" has a right child! adding to queue..."<<std::endl;
             queue.push_back(curr->right);
         }
         visited.push_back(curr);
         queue.pop_front();
     }
 
-    // std::cout<<"visited nodes:  ";
-    // printNodes(visited);
     return visited;
 }
 
@@ -110,6 +80,7 @@ int BinaryTree::treeHeight()
 
 void BinaryTree::rightRotate()
 {
+    if (!root) {std::cout<<"WARNING: empty tree; nothing to rotate"<<std::endl; return;}
     if (!root->left) {std::cout<<"not enough nodes to rightRotate!"<<std::endl; return;}
     TreeNode *x=root, *y=x->left, *z=y->right;
     x->left=z;
@@ -119,6 +90,7 @@ void BinaryTree::rightRotate()
 
 void BinaryTree::leftRotate()
 {
+    if (!root) {std::cout<<"WARNING: empty tree; nothing to rotate"<<std::endl; return;}
     if (!root->right) {std::cout<<"not enough nodes to leftRotate!"<<std::endl; return;}
     TreeNode *x=root, *y=x->right, *z=y->left;
     x->right=z;
