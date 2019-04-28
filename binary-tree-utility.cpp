@@ -48,9 +48,15 @@ void displayTree(BinaryTree&b)
 
         } else { output.append("x "); }
         fifo_queue.pop_front();
-        std::cout<<"queue is now:  ";
-        printNodes(fifo_queue.begin(),fifo_queue.end());
+        // std::cout<<"queue is now:  ";
+        // printNodes(fifo_queue.begin(),fifo_queue.end());
     }
+
+    /* Find the index of the last node data and trim after that;
+    Otherwise we have a bunch of trailing x's representing leaves' null children,
+    which do not tell us anything new about the tree structure*/
+    int last_meaningful_index = output.find_last_not_of(" x");
+    output.resize(last_meaningful_index+1);
     std::cout<<output<<std::endl;
 }
 
@@ -160,6 +166,7 @@ int main()
     b.leftRotate();
     std::cout<<"after rotation:  "<<std::endl;
     displayTree(b);
+    std::cout<<"tree height is:  "<<b.treeHeight()<<".\n";
 
 
     // b.rightRotate();
