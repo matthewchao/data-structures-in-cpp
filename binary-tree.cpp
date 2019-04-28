@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <deque>
+#include <iostream>
+#include <unordered_map>
 
 struct TreeNode {
     int data;
@@ -74,8 +76,36 @@ std::vector<TreeNode*> BinaryTree::BFS()
     return visited;
 }
 
+// returns -1 for empty tree, 0 for the tree with single node, 1 for a tree with two nodes, etc.
 int BinaryTree::treeHeight()
 {
+    if (!root) return -1;  
+
+    // does a dfs, while maintaining a depths map
+    std::unordered_map<TreeNode*,int> depths {{root,0}};
+    std::vector<TreeNode*> to_be_visited_stack {root};
+    TreeNode* curr_node;
+    int curr_height,record_height=0;
+    while (!to_be_visited_stack.empty())
+    {
+        curr_node=to_be_visited_stack.back();
+        curr_height=depths[curr_node];
+        to_be_visited_stack.pop_back();
+        if (!curr_node->left && !curr_node->right) 
+            // we are at a leaf; depth of leaf might be the tree height;
+            record_height=std::max(record_height,curr_height);
+        if (curr_node->right)
+        {
+            depths[curr_node->right]=curr_height+1;
+            to_be_visited_stack.push_back(curr_node->right);
+        }
+        if (curr_node->left)
+        {
+            depths[curr_node->left]=curr_height+1;
+            to_be_visited_stack.push_back(curr_node->left);
+        }
+    }
+    return record_height;
 }
 
 void BinaryTree::rightRotate()
