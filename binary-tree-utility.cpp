@@ -34,7 +34,7 @@ void displayTree(BinaryTree&b)
     // does modified BFS
     std::string output;
     TreeNode* curr;
-    std::deque<TreeNode*> fifo_queue = {b.root};
+    std::deque<TreeNode*> fifo_queue = {b.get_root()};
 
     while (!fifo_queue.empty())
     {
@@ -72,26 +72,21 @@ void displayCompleteTree(BinaryTree& b)
 /* Creates and fills a tree based on user input.
 Subsequent nodes are assigned as children to the front of a "parents" queue
 where any nil node, inputted as 'x', results in the queue being advanced */
-BinaryTree readTree() {
-
-    std::cout<<"Enter in space-separated node values row by row, "
-    "left to right, starting from the root, and "
-    "using 'x' (without quotes) to represent all nil nodes:  "<<std::endl;
-    
+BinaryTree readTree() {    
 
     std::vector<std::deque<int>> grouped_nodes;
     grouped_nodes=readGroupedDeques<int>('x');
-    BinaryTree b;
 
     // bad input yields an tree with NULL root
     if (grouped_nodes[0].empty())
     {
         std::cout<<"Warning: you entered an empty or invalid tree!"<<std::endl;
-        return b;
+        BinaryTree b;
     }
 
     TreeNode* rootNode = new TreeNode(grouped_nodes[0].front());
-    b.root=rootNode;
+    BinaryTree b{rootNode};
+
     std::deque<TreeNode*> parents = {rootNode};
     grouped_nodes[0].pop_front();
 
@@ -152,6 +147,10 @@ BinaryTree readCompleteTree() {
 int main() 
 {
 
+
+    std::cout<<"Enter in space-separated node values row by row, "
+    "left to right, starting from the root"<<std::endl;
+
     // sample trees:
     // x
     // (an empty tree)
@@ -159,14 +158,18 @@ int main()
     // (a path of right children)
     // 1 2 3 4 5 6 7
     // (a complete tree)
-
-    BinaryTree b = readCompleteTree();
+    BinaryTree b = readTree();
 
     displayTree(b);
-    b.leftRotate();
-    std::cout<<"after rotation:  "<<std::endl;
-    displayTree(b);
+    // b.leftRotate();
+    // std::cout<<"after rotation:  "<<std::endl;
+    // displayTree(b);
     std::cout<<"tree height is:  "<<b.treeHeight()<<".\n";
+    std::cout<<"now enter two nodes to find a path between; the ancestor node first:  "<<std::endl;
+    int from_val, to_val;
+    std::cin>>from_val>>to_val;
+    auto path_from_to = b.path(from_val,to_val);
+    printNodes( path_from_to.begin(),path_from_to.end() );
 
 
     // b.rightRotate();
